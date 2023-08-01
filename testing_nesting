@@ -1,0 +1,13 @@
+plug
+        artifactId maven-compiler-plugin
+        version 3.10.1
+        configuration
+            source 17
+            target 17
+            annotationProcessorPaths
+                path
+                    group org.projectlombok
+                    artifactId lombok
+                    version 1.18.28
+            lastConfigurationTag ${VALUE}
+        lastTag value

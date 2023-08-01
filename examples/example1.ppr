@@ -1,0 +1,19 @@
+pure me.ppixel:bengine:1.0-SNAPSHOT
+
+set maven.compiler.source 17
+    maven.compiler.target 17
+    project.build.sourceEncoding UTF-8
+
+dec io.projectreactor:reactor-bom:2022.0.9 (type "pom", scope "import")
+
+dep io.projectreactor.netty:reactor-netty-core
+dep io.projectreactor.netty:reactor-netty-http
+dep org.projectlombok:lombok:1.18.28 (scope "provided")
+
+plug :maven-compiler-plugin:3.10.1
+    configuration (source 17, target 17)
+        annotationProcessorPaths/path org.projectlombok:lombok:1.18.28
+        anno2 val2
+    anotherTag value
+
+plug :maven-compiler-plugin:3.10.1 (configuration (source 17, target 17))

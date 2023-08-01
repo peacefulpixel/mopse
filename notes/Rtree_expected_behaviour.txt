@@ -1,0 +1,26 @@
+IN:
+plug :maven-compiler-plugin:3.10.1
+   configuration (source 17, target 17)
+       annotationProcessorPaths/path org.projectlombok:lombok:1.18.28
+       anno2 val2
+   anotherTag value
+
+OUT:
+Rt_tree["NAME"] = "ROOT"
+Rt_tree["LEN"] = 0
+Rt_tree[1] = "artifactId" SUBSEP "maven-compiler-plugin"
+Rt_tree[2] = "version" SUBSEP  "3.10.1"
+Rt_tree[3]["NAME"] = "configuration"
+Rt_tree[3]["LEN"] = 4
+Rt_tree[3][1] = "source" SUBSEP "17"
+Rt_tree[3][2] = "target" SUBSEP "17"
+Rt_tree[3][3]["NAME"] = "annotationProcessorPaths"
+Rt_tree[3][3]["LEN"] = 8
+Rt_tree[3][3][1]["NAME"] = "path"
+Rt_tree[3][3][1]["LEN"] = 12
+Rt_tree[3][3][1][1] = "group" SUBSEP "org.projectlombok"
+Rt_tree[3][3][1][2] = "artifactId" SUBSEP "lombok"
+Rt_tree[3][3][1][3] = "version" SUBSEP "1.18.28"
+Rt_tree[3][4] = "anno2" SUBSEP "val2"
+Rt_tree[4] = "anotherTag" SUBSEP "value"
+Rt_tree[5] = "emptyTagBecauseNoSubSep"

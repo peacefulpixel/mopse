@@ -99,5 +99,5 @@ Mode == MODE_EC && /^set( .*)?$/ {
 }
 
 END {
-    arr_print_full(Rt_tree)
+    print XML_make_tag(Rt_tree)
 }

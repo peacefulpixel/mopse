@@ -9,8 +9,8 @@
 # Note that $0 will never by changed by that
 function shift() {
     if (NF > 1) {
-        for (_x = 2; _x < NF; _x++) {
-            $(_x - 1) = _x
+        for (_x = 2; _x <= NF; _x++) {
+            $(_x - 1) = $(_x)
         }
     }
 

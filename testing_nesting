@@ -1,5 +1,4 @@
-plug
-        artifactId maven-compiler-plugin
+plug    artifactId maven-compiler-plugin
         version 3.10.1
         configuration
             source 17

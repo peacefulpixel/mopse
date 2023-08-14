@@ -1,4 +1,10 @@
-#!/bin/awk -f
+################################################################################
+# > main.awk                                                                   #
+# The root of the program. Contains BEGIN, END and all the pattern/condition   #
+# matchers. In other words, this file declares everything order-sensetive,     #
+# because project building doesn't consider the source files order, so any     #
+# other src/ file will contain only functions.                                 #
+################################################################################
 
 BEGIN {
     decl_consts()

@@ -1,4 +1,4 @@
-pure me.ppixel:bengine:1.0-SNAPSHOT
+put me.ppixel:bengine:1.0-SNAPSHOT
 
 set maven.compiler.source 17
     maven.compiler.target 17

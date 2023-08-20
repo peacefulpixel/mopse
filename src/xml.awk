@@ -29,7 +29,8 @@ function INTERNAL_XML_make_tag_node(node,   x, res) {
         res = res XML_make_tag(node[x])
     }
 
-    return "<" node["NAME"] ">\n" INTERNAL_XML_tab(res) "</" node["NAME"] ">\n"
+    return "<" node["NAME"] ">" ORS INTERNAL_XML_tab(res) "</" node["NAME"] ">"
+            ORS
 }
 
 function INTERNAL_XML_make_tag_single(entry,    buf) {
@@ -37,7 +38,7 @@ function INTERNAL_XML_make_tag_single(entry,    buf) {
     debug("INTERNAL_XML_make_tag_single " entry)
 
     if (split(entry, buf, SUBSEP) > 1) {
-        return "<" buf[1] ">" buf[2] "</" buf[1] ">\n"
+        return "<" buf[1] ">" buf[2] "</" buf[1] ">" ORS1
     }
 
     if (length(entry) < 1) return ""
@@ -46,10 +47,10 @@ function INTERNAL_XML_make_tag_single(entry,    buf) {
 }
 
 function INTERNAL_XML_tab(xml,  buf, x, l) {
-    l = split(xml, buf, "\n")
+    l = split(xml, buf, ORS)
     xml = ""
     for (x = 0; x < l; x++)
-        xml = xml "  " buf[x + 1] "\n"
+        xml = xml "  " buf[x + 1] ORS
 
     return xml
 }

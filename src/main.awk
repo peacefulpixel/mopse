@@ -7,35 +7,24 @@
 ################################################################################
 
 BEGIN {
-    decl_consts()
+    Const_decl()
 
-    __VERBOSE = 1
+    __VERBOSE = 1 # TODO: Remove
+
+    Arr_def(C_put_data)
 
     Mode = MODE_EC
 }
 
-# Skipping empty lines
-/^[ \t]*$/ { next }
+# Skipping empty lines and comments
+/^[ \t#]*$/ { next }
 
 Mode == MODE_RT {
     Rt_readline()
 }
 
-Mode == MODE_EC && /^plug( .*)?$/ {
-    Com = COM_PLUG
-    Mode_set_rt()
-
-    if (NF == 1) next
-
-    shift()
-    Rt_readline(1)
-}
-
-Mode == MODE_EC && /^set( .*)?$/ {
-    Com = COM_SET
-    Mode_set_rt()
-
-    if (NF == 1) next
+Mode == MODE_EC && /^put( .*)?$/ {
+    Rt_begin(COM_PUT, C_put_data)
 }
 
 END {

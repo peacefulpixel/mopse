@@ -5,12 +5,20 @@
 # always a child.                                                              #
 ################################################################################
 
-# Setting current mode to RT
-function Mode_set_rt() {
-    Mode = MODE_RT
+# Generic mode switching logic
+# Appliable for commands handling trees
+function Rt_begin(com, t_list) {
+    Com = com
+
+    Mode_set(MODE_RT, t_list)
 
     delete Rt_tree # Actual tree of values
     Rt_stackp = 0
+
+    if (NF == 1) next
+
+    shift()
+    Rt_readline(1)
 }
 
 # Subfunction for Rt_put
@@ -32,7 +40,7 @@ function Rt_really_put(tag, val, arr, idx) {
 # Hierarchical nesting of a tag is determinated by whitespace amount (3rd
 # prameter)
 function Rt_put(tag, val, len, arr,   x) {
-    x = arr_length(arr)
+    x = Arr_length(arr)
     debug("Rt_put: tag=" tag " val=" val " len=" len " x=" x)
 
     if (arr["LEN"] == "NONE")
@@ -42,7 +50,7 @@ function Rt_put(tag, val, len, arr,   x) {
         Rt_really_put(tag, val, arr, 1)
     } else if (isarray(arr[x])) { # If last item of branch is also a branch
         if (! "LEN" in arr) fail("Fatal processing error #4001")
-        if (arr["LEN"] < len) { # If branch nesting is less then current item
+        if (arr["LEN"] < len) { # If branch nesting is less than current item
                                 # nesting
             Rt_put(tag, val, len, arr[x]) # Trying to put to child branch
         } else {
@@ -60,7 +68,11 @@ function Rt_put(tag, val, len, arr,   x) {
 
 # Reads current line in RT mode.
 # If first parameter is true then nesting of this line will be ignored and space
-# amount of the next line will set the nesting level
+# amount of the next line will set the nesting level.
+# Example of nest_ignore usage:
+# put group org.apache          # nest_ignore=true ws amount is undefined
+#       artifactId some-stuff   # nest_ignore=false current whitespace amount
+#       version 1.0             #                   will define a nesting
 function Rt_readline(nest_ignore,   len, x, _rest) {
     if (NF < 1) fail("Unable to read tag/tags from line #1001")
 
@@ -77,8 +89,6 @@ function Rt_readline(nest_ignore,   len, x, _rest) {
     for (x = 2; x <= NF; x++) {
         _rest[x - 1] = $(x)
     }
-
-    print "s" $1 "s" $2 "d" $3
 
     debug("Rt_readline: _rest=" length(_rest) " tag=" $1)
 

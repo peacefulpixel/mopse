@@ -8,6 +8,11 @@ function Arr_length(_array,  x) {
     return x - 1
 }
 
+function Arr_copy(src, dst,     i) {
+    for (i in src)
+        dst[i] = src[i]
+}
+
 function Arr_sort_begin() {
     if ("sorted_in" in PROCINFO && ! PROCINFO_ORIGINAL_SORTING)
         PROCINFO_ORIGINAL_SORTING = PROCINFO["sorted_in"]

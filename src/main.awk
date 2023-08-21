@@ -12,19 +12,31 @@ BEGIN {
     __VERBOSE = 1 # TODO: Remove
 
     Arr_def(C_put_data)
+    Arr_def(C_set_data)
+    Arr_def(C_dep_data)
 
     Mode = MODE_EC
 }
 
 # Skipping empty lines and comments
-/^[ \t#]*$/ { next }
+/^[ \t]*$/ || /^#.*$/ { debug("Skipping empty line or comment"); next }
 
 Mode == MODE_RT {
-    Rt_readline()
+    if (/^[^ \t]+/) {
+        Mode_set(MODE_EC, "")
+    } else Rt_readline()
 }
 
 Mode == MODE_EC && /^put( .*)?$/ {
-    Rt_begin(COM_PUT, C_put_data)
+    Rt_begin(COM_PUT, "C_put_data")
+}
+
+Mode == MODE_EC && /^set( .*)?$/ {
+    Rt_begin(COM_SET, "C_set_data")
+}
+
+Mode == MODE_EC && /^dep( .*)?$/ {
+    Rt_begin(COM_DEP, "C_dep_data")
 }
 
 END {

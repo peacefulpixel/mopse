@@ -32,7 +32,7 @@ function log_error(error_msg) {
 
 function debug(msg) {
     if (__VERBOSE == 1)
-        print "[DEBUG] >> " msg
+        print "[DEBUG] " NR " >> " msg
 }
 
 function fail(error_msg) {

@@ -9,7 +9,7 @@
 BEGIN {
     Const_decl()
 
-    __VERBOSE = 1 # TODO: Remove
+    __VERBOSE = 0 # TODO: Remove
 
     Arr_def(C_put_data)
     Arr_def(C_set_data)
@@ -39,6 +39,35 @@ Mode == MODE_EC && /^dep( .*)?$/ {
     Rt_begin(COM_DEP, "C_dep_data")
 }
 
+function printGenericTag(c_data,    i, x) {
+    for (i in c_data) {
+        if (c_data[i]["NAME"] == "$ROOT") {
+            for (x = 1; x in c_data[i]; x++) {
+                print XML_make_tag(c_data[i][x])
+            }
+        } else
+            print XML_make_tag(c_data[i])
+    }
+}
+
 END {
-    print XML_make_tag(Rt_tree)
+    print Const_hedaer()
+
+    if (Arr_length(C_put_data) > 0) {
+        printGenericTag(C_put_data)
+    }
+
+    if (Arr_length(C_set_data) > 0) {
+        print "<properties>"
+        printGenericTag(C_set_data)
+        print "</properties>"
+    }
+
+    if (Arr_length(C_dep_data) > 0) {
+        print "<dependencies>"
+        printGenericTag(C_dep_data)
+        print "</dependencies>"
+    }
+
+    print Const_footer()
 }

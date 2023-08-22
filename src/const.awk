@@ -16,13 +16,14 @@ function Const_decl() {
 # Also declares a module version
 # TODO: support different versions
 function Const_hedaer() {
-    return  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" ORS
-            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"" ORS
-            "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-            ORS
-            "         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 "
-            "         http://maven.apache.org/xsd/maven-4.0.0.xsd\">" ORS
-            "    <modelVersion>4.0.0</modelVersion>" ORS
+    return  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" ORS \
+            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"" ORS \
+            "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" \
+            ORS \
+            "         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0\"" \
+            ORS \
+            "         http://maven.apache.org/xsd/maven-4.0.0.xsd\">" ORS \
+            "    <modelVersion>4.0.0</modelVersion>" ORS \
 }
 
 # Creates a pom.xml file footer

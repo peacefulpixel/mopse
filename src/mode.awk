@@ -14,10 +14,8 @@ function Mode_flush(    len) {
         log_error("Unexpected state #6818")
 
     if (Mode == MODE_RT) {
-        len = Arr_length(SYMTAB[Mode_current_list])
-        SYMTAB[Mode_current_list][len + 1][""] = "" # Special declaration for
-                                                    # SYMTAB
-        Arr_copy(Rt_tree, SYMTAB[Mode_current_list][len + 1])
+        len = Arr_sub_length(MODE_TAB, Mode_current_list)
+        Arr_copy(Rt_tree, MODE_TAB, Mode_current_list SUBSEP len + 1)
     } else if (Mode == MODE_RV) {
         fail("Not supported yet #5512225")
     } else {

@@ -4,37 +4,37 @@
 # Core entry point is XML_make_tag()                                          #
 ###############################################################################
 
-# Converts array or string to an XML
-# Expecting format for string is "tag" SUBSEP "value"
-function XML_make_tag(thing) {
+# Creates XML from tag tree or tag-value pair
+# Expecting format for pair is "tag" SUBSEP "value"
+function XML_make_tag(array, key) {
 
-    if (isarray(thing)) return INTERNAL_XML_make_tag_node(thing)
-    else                return INTERNAL_XML_make_tag_single(thing)
+    if (Arr_mdkey(key, "SPACES") in array)
+            return INTERNAL_XML_make_tag_node(array, key)
+    else    return INTERNAL_XML_make_tag_single(array, key)
 }
 
-function INTERNAL_XML_make_tag_node(node,   x, res) {
+function INTERNAL_XML_make_tag_node(array, key,     x, res) {
 
-    if (!"LEN" in node) {
-        fail("Invalid node")
-    }
-
-    if (!"NAME" in node) {
+    if (! Arr_mdkey(key, "NAME") in array) {
         print "Feature is not supported yet #867172"
     }
 
-    debug("INTERNAL_XML_make_tag_node " node["NAME"] " %% " node["LEN"])
+    debug("INTERNAL_XML_make_tag_node " array[Arr_mdkey(key, "NAME")] " %% " \
+        array[Arr_mdkey(key, "SPACES")])
 
     res = ""
-    for (x = 1; isarray(node[x]) || node[x]; x++) {
-        res = res XML_make_tag(node[x])
+    for (x = 1; Arr_mdkey(key, x, "SPACES") in array ||
+                Arr_mdkey(key, x) in array; x++) {
+
+        res = res XML_make_tag(array, Arr_mdkey(key, x))
     }
 
-    return "<" node["NAME"] ">" ORS INTERNAL_XML_tab(res) "</" node["NAME"] ">"
-            ORS
+    return  "<" array[Arr_mdkey(key, "NAME")] ">" ORS res "</" \
+            array[Arr_mdkey(key, "NAME")] ">" ORS
 }
 
-function INTERNAL_XML_make_tag_single(entry,    buf) {
-
+function INTERNAL_XML_make_tag_single(array, key,   buf, entry) {
+    entry = array[key]
     debug("INTERNAL_XML_make_tag_single " entry)
 
     if (split(entry, buf, SUBSEP) > 1) {
@@ -44,13 +44,4 @@ function INTERNAL_XML_make_tag_single(entry,    buf) {
     if (length(entry) < 1) return ""
 
     fail("Feature is not supported yet #262392")
-}
-
-function INTERNAL_XML_tab(xml,  buf, x, l) {
-    l = split(xml, buf, ORS)
-    xml = ""
-    for (x = 0; x < l; x++)
-        xml = xml "  " buf[x + 1] ORS
-
-    return xml
 }

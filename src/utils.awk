@@ -43,7 +43,7 @@ function fail(error_msg) {
 # Joins all the elements of INTEGER INDEXED array from 0 or 1 to the end
 # Returns the joined string
 function str_join(arr, delimiter,   x, len, res) {
-    len = length(arr)
+    len = Arr_length(arr)
 
     if (0 in arr) x = 0
     else x = 1
@@ -53,7 +53,7 @@ function str_join(arr, delimiter,   x, len, res) {
 
     res = arr[x++]
     for (; x in arr; x++) {
-        res += delimiter arr[x]
+        res = res delimiter arr[x]
     }
 
     return res

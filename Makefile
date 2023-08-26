@@ -23,3 +23,5 @@ clean:
 
 install:
 	echo "TODO"
+
+portable:

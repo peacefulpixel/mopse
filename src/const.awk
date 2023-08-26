@@ -1,10 +1,10 @@
 function Const_decl() {
 
-    # Available commands
-    COM_SET="COMMAND_SET"
-    COM_PLUG="COMMAND_PLUG"
-    COM_PUT="COMMAND_PUT"
-    COM_DEP="COMMAND_DEP"
+    # Available commands. Used for store trees for each command
+    COM_SET  = "COMMAND_SET"
+    COM_PLUG = "COMMAND_PLUG"
+    COM_PUT  = "COMMAND_PUT"
+    COM_DEP  = "COMMAND_DEP"
 
     # Modes of parser
     MODE_EC="MODE_EXPECTING_COMMAND"

@@ -7,9 +7,7 @@
 
 # Generic mode switching logic
 # Appliable for commands handling trees
-function Rt_begin(com, t_list) {
-    Com = com
-
+function Rt_begin(t_list) {
     Mode_set(MODE_RT, t_list)
 
     delete Rt_tree # Actual tree of values
@@ -23,14 +21,14 @@ function Rt_begin(com, t_list) {
 
 # Subfunction for Rt_put
 # Needed only for not duplicating a code, but semantically related to Rt_put
-function Rt_really_put(tag, val, arr, idx) {
+function Rt_really_put(tag, val, idx) {
     if (val) { # Tag has text value, so no other children here
         debug("Rt_really_put: END")
-        arr[idx] = tag SUBSEP val
+        Rt_tree[idx] = tag SUBSEP val
     } else {   # Tag is empty for now, might have children in future
         debug("Rt_really_put: EMPTY")
-        arr[idx]["NAME"] = tag
-        arr[idx]["LEN"] = "NONE"
+        Rt_tree[idx, "NAME"] = tag
+        Rt_tree[idx, "SPACES"] = "NONE"
     }
 }
 
@@ -39,29 +37,31 @@ function Rt_really_put(tag, val, arr, idx) {
 # children anymore.
 # Hierarchical nesting of a tag is determinated by whitespace amount (3rd
 # prameter)
-function Rt_put(tag, val, len, arr,   x) {
-    x = Arr_length(arr)
-    debug("Rt_put: tag=" tag " val=" val " len=" len " x=" x)
+function Rt_put(tag, val, spc,  x, pref) {
+    x = Arr_length(Rt_tree)
+    debug("Rt_put: tag=" tag " val=" val " spc=" spc " x=" x)
 
-    if (arr["LEN"] == "NONE")
-        arr["LEN"] = len
+    if (Rt_tree[Arr_mdkey(pref, "SPACES")] == "NONE")
+        Rt_tree[Arr_mdkey(pref, "SPACES")] = spc
 
     if (x < 1) { # If current branch has no items at all
-        Rt_really_put(tag, val, arr, 1)
-    } else if (isarray(arr[x])) { # If last item of branch is also a branch
-        if (! "LEN" in arr) fail("Fatal processing error #4001")
-        if (arr["LEN"] < len) { # If branch nesting is less than current item
-                                # nesting
-            Rt_put(tag, val, len, arr[x]) # Trying to put to child branch
+        Rt_really_put(tag, val, Arr_mdkey(pref, 1))
+    } else if (Arr_mdkey(pref, x, "NAME") in Rt_tree) { # If last item of branch is
+                                                     # also a branch
+        if (Rt_tree[Arr_mdkey(pref, "SPACES")] < spc) { # If branch nesting is less than
+                                         # current item nesting
+            Rt_put(tag, val, spc, 8008135, pref x) # Trying to put to a
+                                                        # child branch
         } else {
-            if (arr["LEN"] != len) fail("Invalid nesting #1002")
-            Rt_really_put(tag, val, arr, ++x) # If nesting is same, put tag as
+            if (Rt_tree[Arr_mdkey(pref, "SPACES")] != spc) fail("Invalid nesting #1002")
+            Rt_really_put(tag, val, Arr_mdkey(pref, ++x)) # If nesting is same, put tag as
                                               # following
         }
     } else {
-        if (arr["LEN"] != len)
-            fail("Invalid nesting #1003/" arr["LEN"] " " len)
-        Rt_really_put(tag, val, arr, ++x) # If nesting is same, put tag as
+        # Probably means pref SUBSEP "SPACES" so SUBSEP at the start is wrong
+        if (Rt_tree[Arr_mdkey(pref, "SPACES")] != spc)
+            fail("Invalid nesting #1003/" Rt_tree[Arr_mdkey(pref, "SPACES")] " " spc)
+        Rt_really_put(tag, val, Arr_mdkey(pref, ++x)) # If nesting is same, put tag as
                                           # following
     }
 }
@@ -82,16 +82,15 @@ function Rt_readline(nest_ignore,   len, x, _rest) {
 
     if (Rt_stackp == 0) {
         Rt_tree["NAME"] = "$ROOT"
-        Rt_tree["LEN"] = "NONE"
-        Rt_stackp++
+        Rt_tree["SPACES"] = "NONE"
+        Rt_stackp++ # TODO Replace stackp with bool
     }
 
-    for (x = 2; x <= NF; x++) {
+    for (x = 2; x <= NF; x++)
         _rest[x - 1] = $(x)
-    }
 
-    debug("Rt_readline: _rest=" length(_rest) " tag=" $1)
+    debug("Rt_readline: _rest=" Arr_length(_rest, "") " tag=" $1)
 
-    if (length(_rest)) Rt_put($1, str_join(_rest, SUBSEP), len, Rt_tree)
+    if (Arr_length(_rest)) Rt_put($1, str_join(_rest, SUBSEP), len)
     else Rt_put($1, "", len, Rt_tree)
 }

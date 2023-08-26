@@ -1,17 +1,22 @@
+#!/bin/sh
+
+'
 ################################################################################
 # > main.awk                                                                   #
 # The root of the program. Contains BEGIN, END and all the pattern/condition   #
 # matchers. In other words, this file declares everything order-sensetive,     #
-# because project building doesn't consider the source files order, so any     #
+# because project building doesnt consider the source files order, so any     #
 # other src/ file will contain only functions.                                 #
 ################################################################################
 
 BEGIN {
     Const_decl()
 
-    __VERBOSE = 1 # TODO: Remove
+    __VERBOSE = 0 # TODO: Remove
 
-    Arr_def(MODE_TAB)
+    Arr_def(C_put_data)
+    Arr_def(C_set_data)
+    Arr_def(C_dep_data)
 
     Mode = MODE_EC
 }
@@ -26,49 +31,47 @@ Mode == MODE_RT {
 }
 
 Mode == MODE_EC && /^put( .*)?$/ {
-    Rt_begin(COM_PUT)
+    Rt_begin(COM_PUT, "C_put_data")
 }
 
 Mode == MODE_EC && /^set( .*)?$/ {
-    Rt_begin(COM_SET)
+    Rt_begin(COM_SET, "C_set_data")
 }
 
 Mode == MODE_EC && /^dep( .*)?$/ {
-    Rt_begin(COM_DEP)
+    Rt_begin(COM_DEP, "C_dep_data")
 }
 
 function printGenericTag(c_data,    i, x) {
-    for (i = 1; Arr_mdkey(c_data, i) in MODE_TAB; i++) {
-        if (MODE_TAB[Arr_mdkey(c_data, i, "NAME")] == "$ROOT") {
-            for (x = 1; Arr_mdkey(c_data, i, x) in MODE_TAB; x++) {
-                print XML_make_tag(MODE_TAB, Arr_mdkey(c_data, i, x))
+    for (i in c_data) {
+        if (c_data[i]["NAME"] == "$ROOT") {
+            for (x = 1; x in c_data[i]; x++) {
+                print XML_make_tag(c_data[i][x])
             }
         } else
-            print XML_make_tag(MODE_TAB, Arr_mdkey(c_data, i))
+            print XML_make_tag(c_data[i])
     }
 }
 
 END {
     print Const_hedaer()
 
-    print Arr_sub_length(MODE_TAB, COM_PUT)
-#    print ">>" MODE_TAB[Arr_mdkey(COM_PUT, 1)]
-    Arr_mdprint(MODE_TAB)
-    if (Arr_sub_length(MODE_TAB, COM_PUT) > 0) {
-        printGenericTag(COM_PUT)
+    if (Arr_length(C_put_data) > 0) {
+        printGenericTag(C_put_data)
     }
 
-    if (Arr_sub_length(MODE_TAB, COM_SET) > 0) {
+    if (Arr_length(C_set_data) > 0) {
         print "<properties>"
-        printGenericTag(COM_SET)
+        printGenericTag(C_set_data)
         print "</properties>"
     }
 
-    if (Arr_sub_length(MODE_TAB, COM_DEP) > 0) {
+    if (Arr_length(C_dep_data) > 0) {
         print "<dependencies>"
-        printGenericTag(COM_DEP)
+        printGenericTag(C_dep_data)
         print "</dependencies>"
     }
 
     print Const_footer()
 }
+'

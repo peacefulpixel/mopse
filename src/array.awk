@@ -10,22 +10,20 @@ function Arr_length(array,  x) {
     return x - 1
 }
 
-function Arr_sub_length(array, prefix,  x, k, kl) {
-    x = 1
-
-    # TODO: Clear code
-#    print "GO! " Arr_mdkey(prefix, x)
-    for (k in array) {
-        kl = length(Arr_mdkey(prefix, x))
-#        print "Working on " k " as " substr(k, 0, kl)
-        if (substr(k, 0, kl) == Arr_mdkey(prefix, x)) {
-#            print "MATCH"
-            x++
-        }
-
-    }
-
+function Arr_sub_length(array, prefix,  x) {
+    for (x = 1; INTERNAL_Arr_has_key_like(array, Arr_mdkey(prefix, x)); x++) {}
     return x - 1
+}
+
+# Internal function for Arr_sub_length
+# Checks does the array has a key that starts with a "like" parameter
+function INTERNAL_Arr_has_key_like(array, like,     k) {
+
+    for (k in array)
+        if (substr(k, 0, length(like)) == like)
+            return 1
+
+    return 0
 }
 
 function Arr_copy(src, dst, dst_addr,   i) {

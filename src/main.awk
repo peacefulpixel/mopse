@@ -9,7 +9,7 @@
 BEGIN {
     Const_decl()
 
-    __VERBOSE = 1 # TODO: Remove
+    __VERBOSE = 0 # TODO: Remove
 
     Arr_def(MODE_TAB)
 
@@ -38,7 +38,7 @@ Mode == MODE_EC && /^dep( .*)?$/ {
 }
 
 function printGenericTag(c_data,    i, x) {
-    for (i = 1; Arr_mdkey(c_data, i) in MODE_TAB; i++) {
+    for (i = 1; i <= Arr_sub_length(MODE_TAB, c_data); i++) {
         if (MODE_TAB[Arr_mdkey(c_data, i, "NAME")] == "$ROOT") {
             for (x = 1; Arr_mdkey(c_data, i, x) in MODE_TAB; x++) {
                 print XML_make_tag(MODE_TAB, Arr_mdkey(c_data, i, x))
@@ -51,9 +51,6 @@ function printGenericTag(c_data,    i, x) {
 END {
     print Const_hedaer()
 
-    print Arr_sub_length(MODE_TAB, COM_PUT)
-#    print ">>" MODE_TAB[Arr_mdkey(COM_PUT, 1)]
-    Arr_mdprint(MODE_TAB)
     if (Arr_sub_length(MODE_TAB, COM_PUT) > 0) {
         printGenericTag(COM_PUT)
     }
